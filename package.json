@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "devDependencies": {
     "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
+    "parcel": "^2.16.4",
     "prettier": "^3.8.3"
+  },
+  "dependencies": {
+    "waait": "^1.0.5"
   }
 }
