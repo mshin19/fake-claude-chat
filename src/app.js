@@ -1,9 +1,11 @@
 import wait from 'waait';
+import { fetchResponse } from './api.js';
+import { saveToLocalStorage, restoreFromLocalStorage } from './storage.js';
+import { displayChat } from './ui.js';
 
 const userInput = document.querySelector('#userInput');
 const sendButton = document.querySelector('#sendBtn');
 const clearButton = document.querySelector('#clearBtn');
-
 const messages = document.querySelector('#messages');
 
 const chat = [];
@@ -20,7 +22,7 @@ async function handleSend(event) {
       id: Date.now(),
     };
     chat.push(userChat);
-    displayChat();
+    displayChat(chat);
     //2. Clear the input
     userInput.value = '';
     //3. Show thinking indicator
@@ -39,31 +41,22 @@ async function handleSend(event) {
     };
     chat.push(fakeChat);
     document.querySelector('#indicator').remove();
-    displayChat();
+    displayChat(chat);
+    saveToLocalStorage(chat);
   }
 }
 
-function displayChat() {
-  const html = chat
-    .map(
-      (message) => `<p><strong>${message.role}:</strong> ${message.text}</p>`
-    )
-    .join('');
-  messages.innerHTML = html;
-}
-
-async function fetchResponse() {
-  const response = await fetch('https://icanhazdadjoke.com', {
-    headers: {
-      Accept: 'application/json',
-    },
-  });
-  const data = await response.json();
-  return data.joke;
+function handleClear(chat) {
+  localStorage.clear();
+  chat.length = 0;
+  messages.textContent = '';
 }
 
 sendButton.addEventListener('click', handleSend);
-sendButton.addEventListener('keyup', handleSend);
+userInput.addEventListener('keyup', handleSend);
+clearButton.addEventListener('click', handleClear);
+
+restoreFromLocalStorage(chat);
 
 //What app needs to do:
 //1. User types a message and hits Send or Enter
